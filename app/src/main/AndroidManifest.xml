@@ -11,13 +11,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".DemoActivity">
+        <activity android:name=".DemoActivity"
+                  android:label="选择一个功能和API">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity android:name=".DetailsActivity"/>
+        <activity android:name=".ue.NotificationActivity"
+            android:label="通知相关"/>
     </application>
 
 </manifest>
