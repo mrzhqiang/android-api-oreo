@@ -1,12 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <Button
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="sendChannel"
-        android:text="1.通知渠道"/>
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+  <Button
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:onClick="openNotification"
+      android:text="通知指南"
+      style="@style/Widget.AppCompat.Button.Colored"
+      />
+  <Button
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:onClick="sendChannel"
+      android:text="1.通知渠道"
+      style="@style/Widget.AppCompat.Button.Colored"
+      />
+  <Button
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:onClick="sendMark"
+      android:text="2.通知标志"
+      style="@style/Widget.AppCompat.Button.Colored"
+      />
+
 </LinearLayout>

@@ -1,26 +1,38 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 
-          package="cn.mrzhqiang.android_api_oreo"
+    package="cn.mrzhqiang.oreo"
     >
 
-    <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+  <application
+      android:allowBackup="true"
+      android:icon="@mipmap/ic_launcher"
+      android:label="@string/app_name"
+      android:roundIcon="@mipmap/ic_launcher_round"
+      android:supportsRtl="true"
+      android:theme="@style/AppTheme">
 
-        <activity android:name=".DemoActivity"
-                  android:label="选择一个功能和API">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-        <activity android:name=".DetailsActivity"/>
-        <activity android:name=".ue.NotificationActivity"
-            android:label="通知相关"/>
-    </application>
+    <activity
+        android:name=".DemoActivity"
+        android:label="Android 8.0 功能和 API">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+    </activity>
+
+    <activity
+        android:name=".api.NotificationActivity"
+        android:label="通知">
+      <intent-filter>
+        <action android:name="user0"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+      </intent-filter>
+    </activity>
+
+    <activity
+        android:name=".api.GuideNotifyActivity"
+        android:label="通知指南"/>
+
+  </application>
 
 </manifest>

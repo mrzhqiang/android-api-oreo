@@ -1,4 +1,4 @@
-package cn.mrzhqiang.android_api_oreo.ue;
+package cn.mrzhqiang.oreo.api;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -14,9 +14,14 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import cn.mrzhqiang.android_api_oreo.DemoActivity;
-import cn.mrzhqiang.android_api_oreo.R;
+import cn.mrzhqiang.oreo.DemoActivity;
+import cn.mrzhqiang.oreo.R;
 
+/**
+ * 用户体验：通知
+ *
+ * @author mrZQ
+ */
 public class NotificationActivity extends AppCompatActivity {
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -25,6 +30,11 @@ public class NotificationActivity extends AppCompatActivity {
 
     // v4的通知管理器，兼容低版本
     // NotificationManager notificationManagerCompat = NotificationManagerCompat.from(this);
+  }
+
+  /** 完整的通知相关api */
+  public void openNotification(View view) {
+
   }
 
   /** 1.通知渠道 */
@@ -91,5 +101,9 @@ public class NotificationActivity extends AppCompatActivity {
           .setPriority(NotificationCompat.PRIORITY_DEFAULT)
           .build();
     }
+  }
+
+  public void sendMark(View view) {
+
   }
 }

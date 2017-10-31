@@ -1,4 +1,4 @@
-package cn.mrzhqiang.android_api_oreo;
+package cn.mrzhqiang.oreo;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -14,13 +14,11 @@ import static org.junit.Assert.*;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-@RunWith(AndroidJUnit4.class)
-public class ExampleInstrumentedTest {
-    @Test
-    public void useAppContext() throws Exception {
-        // Context of the app under test.
-        Context appContext = InstrumentationRegistry.getTargetContext();
+@RunWith(AndroidJUnit4.class) public class ExampleInstrumentedTest {
+  @Test public void useAppContext() throws Exception {
+    // Context of the app under test.
+    Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("cn.mrzhqiang.anndroid_api_oreo", appContext.getPackageName());
-    }
+    assertEquals("cn.mrzhqiang.anndroid_api_oreo", appContext.getPackageName());
+  }
 }
