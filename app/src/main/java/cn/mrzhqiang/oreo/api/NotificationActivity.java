@@ -28,13 +28,16 @@ public class NotificationActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_notification);
 
-    // v4的通知管理器，兼容低版本
+    // v4的通知管理器，兼容低版本，但使用方式略有不同，请参照官方培训
+    // https://developer.android.google.cn/guide/topics/ui/notifiers/notifications.html#NotificationResponse
+
     // NotificationManager notificationManagerCompat = NotificationManagerCompat.from(this);
   }
 
   /** 完整的通知相关api */
   public void openNotification(View view) {
-
+    Intent intent = new Intent(this, GuideNotifyActivity.class);
+    startActivity(intent);
   }
 
   /** 1.通知渠道 */
@@ -42,7 +45,7 @@ public class NotificationActivity extends AppCompatActivity {
     NotificationManager notificationManager =
         (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
 
-    // 8.0，创建一个通知通道
+    /*8.0，创建一个通知通道*/
     // id：每个包唯一，值过长(>1000)会被截断；
     // name：用户可见的通道名，截断判断与id一致，推荐40个字符；
     // importance：通道的重要性
@@ -50,7 +53,7 @@ public class NotificationActivity extends AppCompatActivity {
         new NotificationChannel("1", "奥利奥", NotificationManager.IMPORTANCE_DEFAULT);
     notificationManager.createNotificationChannel(channel);
 
-    // Notification.Builder(context) 已被弃用，必须使用channel才能正常发出通知
+    // Notification.Builder(context) 已被弃用，且在8.0系统上必须使用channel才能发出通知
     Notification notify = new Notification.Builder(this, "1").setSmallIcon(R.drawable.ic_sample)
         .setContentTitle("1.通知渠道")
         .setContentText("这是8.0新特性，带通知渠道的通知")
@@ -58,6 +61,14 @@ public class NotificationActivity extends AppCompatActivity {
 
     notificationManager.notify(1, notify);
   }
+
+  public void sendMark(View view) {
+
+  }
+
+
+
+
 
   public void empty() {
 
@@ -103,7 +114,4 @@ public class NotificationActivity extends AppCompatActivity {
     }
   }
 
-  public void sendMark(View view) {
-
-  }
 }
