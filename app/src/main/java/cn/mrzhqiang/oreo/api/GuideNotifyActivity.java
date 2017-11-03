@@ -1,7 +1,11 @@
 package cn.mrzhqiang.oreo.api;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.app.NotificationChannelGroup;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,9 +24,65 @@ import cn.mrzhqiang.oreo.R;
 
 public class GuideNotifyActivity extends AppCompatActivity {
 
+  NotificationManager notificationManager;
+  NotificationManager mNotificationManager;
+  NotificationManagerCompat notificationManagerCompat;
+
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_nofity_guide);
+
+    /*首先，取得NotificationManager*/
+
+    // Tips：通过API参考得知，可以用Context.getSystemService(Class or String)的方式取得实例
+
+    // a.传入Class，内部调用字符串常量取得实例
+    notificationManager = getSystemService(NotificationManager.class);
+    // b.字符串常量，要类型转换
+    mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    // c.兼容管理器，内部包裹NotificationManager，在旧版本上使用
+    notificationManagerCompat = NotificationManagerCompat.from(this);
+
+    // 关于NotificationManager：
+    // 通过Context.getSystemService获取的系统服务可能与Context密切相关
+    // 一般来说，不要在各种不同的Context（Activities、Applications、Services、Providers等）之间共享服务对象
+    // 原文：
+    /*
+     * Note: System services obtained via this API may be closely associated with
+     * the Context in which they are obtained from.  In general, do not share the
+     * service objects between various different contexts (Activities, Applications,
+     * Services, Providers, etc.)
+     * */
+
+    /*额外的，通知通道以及通道分组*/
+
+    // 需要AccountManager获取Account来创建或更新NotificationChannelGroup：
+    // 1.只要AccountManager处于活动状态，Context就会被使用，所以一定要使用一个Context，
+    // 其生命周期与任何注册到addOnAccountsUpdatedListener或类似方法的监听器都是相称的
+    // 2.主线程调用是安全的
+    // 3.不需要任何权限
+    AccountManager accountManager = AccountManager.get(this);
+    Account[] accounts = accountManager.getAccounts();
+    for (Account a : accounts) {
+      // 创建通知类别分组。官方建议：分组内的所有通道都属于同一个账户；多账户对应多分组。
+      NotificationChannelGroup group = new NotificationChannelGroup(a.name, "类别组100");
+    }
+    // 更新或新建这个分组，内部会转换为List，调用了createNotificationChannelGroups(List)
+    notificationManager.createNotificationChannelGroup(group);
+
+
+    // 8.0需要创建通知通道/通知类别：这个将区分应用发出来的不同通知，可以单独针对这一类的通知，进行屏蔽等操作
+    // 如何查看通知类别？长按某个通知内容即可。
+    NotificationChannel channel =
+        new NotificationChannel("1", "单个类别1", NotificationManager.IMPORTANCE_DEFAULT);
+    // 这里开启的话，会在应用启动图标上，显示一个主题色的圆形角标，但好像没有数字；默认就是true
+    channel.setShowBadge(true);
+    // 类别组，只用于分组，没有其他特别的含义，甚至系统找不到相关内容，而且目前也没有任何作用
+    channel.setGroup(group.getId());
+    channel.setName("新的类别1");
+
+    // 这里是创建和更新单个类别的方法
+    notificationManager.createNotificationChannel(channel);
   }
 
   public void design(View view) {
@@ -34,59 +94,15 @@ public class GuideNotifyActivity extends AppCompatActivity {
   public void create(View view) {
     Toast.makeText(this, "创建了一个通知", Toast.LENGTH_SHORT).show();
 
-    /*首先，取得NotificationManager*/
-
-    // TIP：通过API参考得知，可以用Context.getSystemService(Class or String)的方式取得实例
-
-    // a.字符串常量的方式，需要类型转换，不建议使用。需要注意的是：如果传入错误的字符串，则返回null
-    //NotificationManager notificationManager =
-    //    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-    // b.传入Class的方式，简单舒服，内部调用字符串常量的方式。需要注意的是：如果传入错误的Class，则返回null
-    NotificationManager notificationManager = getSystemService(NotificationManager.class);
-
-    // TODO 一般的，以上两种方式获得的系统服务，不要在Activities、Applications、Services、Providers之间共享
-    // 也就是说，最好在使用的时候，去获得对应上下文的系统服务，而不是当做全局系统服务来用
-    /*
-     * 原文：
-     * Note: System services obtained via this API may be closely associated with
-     * the Context in which they are obtained from.  In general, do not share the
-     * service objects between various different contexts (Activities, Applications,
-     * Services, Providers, etc.)
-     * */
-
-    // 也可以使用兼容包的管理器，也很简单，内部也用字符串常量方式获得系统通知服务。
-    // 这个只是包裹了一个NotificationManager，并针对旧版本的相关方法进行兼容
-    NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
-
-
-    /*1、创建通知*/
+    /*一、创建通知*/
 
     // 使用Notification.Builder或NotificationCompat.Builder指定相关内容：UI和操作
     // Notification.Builder在3.0版本（API 11）上被引入
-
-    /*// 这里是创建和更新类别群组，API也提供了批量更新创建的方法——但基本上没什么特别的作用
-    NotificationChannelGroup group = new NotificationChannelGroup("100", "类别组100");
-    notificationManager.createNotificationChannelGroup(group);*/
-
-    /*// 8.0需要创建通知通道/通知类别：这个将区分应用发出来的不同通知，可以单独针对这一类的通知，进行屏蔽等操作
-    // 如何查看通知类别？长按某个通知内容即可。
-    NotificationChannel channel =
-        new NotificationChannel("1", "单个类别1", NotificationManager.IMPORTANCE_DEFAULT);
-    // 这里开启的话，会在应用启动图标上，显示一个主题色的圆形角标，但好像没有数字；默认就是true
-    channel.setShowBadge(true);
-    // 类别组，只用于分组，没有其他特别的含义，甚至系统找不到相关内容，而且目前也没有任何作用
-    channel.setGroup(group.getId());
-    channel.setName("新的类别1");*/
-
-    /*// 这里是创建和更新单个类别的方法
-    notificationManager.createNotificationChannel(channel);*/
 
     // FIXME 在旧系统下，仅使用this参数或许能正常工作；但在8.0系统上，发不出来通知
     NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "1");
     // 使用Builder.build()创建Notification对象
     // 使用NotificationManager.notify()方法，传入Notification对象，就可以发送到抽屉式通知栏
-    // 没有设定必需内容，不可用
     //Notification notification = builder.build();
     //notificationManager.notify(1, notification);
 
@@ -104,8 +120,7 @@ public class GuideNotifyActivity extends AppCompatActivity {
             /*.addExtras()
             .addRemoteInput()
             .extend()
-            .setAllowGeneratedReplies()*/
-            .build();
+            .setAllowGeneratedReplies()*/.build();
     // 可以添加多个，以按钮形式排列，当超出内容时，后续添加则没有作用
     builder.addAction(action);
 
@@ -177,7 +192,6 @@ public class GuideNotifyActivity extends AppCompatActivity {
     // 媒体传输控制播放
     builder.setCategory(NotificationCompat.CATEGORY_TRANSPORT);*/
 
-
     // 发通知
     notificationManager.notify("notify", 1, builder.build());
     //notificationManager.notify("notify", 2, builder.build());
@@ -202,4 +216,5 @@ public class GuideNotifyActivity extends AppCompatActivity {
         .setSmallIcon(R.mipmap.ic_launcher).setContentTitle("检查单个类别").setContentText(channelBuilder.toString())
         .build());*/
   }
+
 }
